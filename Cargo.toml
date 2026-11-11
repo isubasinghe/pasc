@@ -1,0 +1,11 @@
+[package]
+name = "pasc"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "lib/lib.rs"
+
+[dependencies]
+clap = { version = "4.6.7", features = ["derive"] }
+tempfile = "3.27.0"
