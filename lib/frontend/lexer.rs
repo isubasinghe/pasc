@@ -1,10 +1,15 @@
-use std::{fs::File, io::{BufRead, BufReader, Read}, marker::PhantomData, path::PathBuf};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Read},
+    marker::PhantomData,
+    path::PathBuf,
+};
 
 /// Lexer holds lexing state
 pub struct Lexer<'a> {
     source: &'a str,
     error: bool,
-    pos: u64
+    pos: u64,
 }
 
 /// Token holds the direct token as well as
@@ -12,7 +17,7 @@ pub struct Lexer<'a> {
 pub struct Token<'a> {
     raw_str: &'a str,
     offset: usize,
-    kind: TokenValue<'a>
+    kind: TokenValue<'a>,
 }
 
 pub enum TokenValue<'a> {
@@ -22,7 +27,7 @@ pub enum TokenValue<'a> {
     Ident(&'a str),
     Colon,
     StrTyp,
-    Digit(&'a str)
+    Digit(&'a str),
 }
 
 impl<'a> Token<'a> {
@@ -31,28 +36,25 @@ impl<'a> Token<'a> {
     }
 }
 
-
-pub struct FileReader { 
+pub struct FileReader {
     contents: Vec<u8>,
     line_offset: u64,
-    line_count: u64
+    line_count: u64,
 }
 
 impl FileReader {
     pub fn new(file_name: PathBuf) -> Self {
         let data = std::fs::read(file_name).expect("was unable to read input file");
-        FileReader {contents: data, line_count: 0, line_offset: 0}
+        FileReader {
+            contents: data,
+            line_count: 0,
+            line_offset: 0,
+        }
     }
 }
 
-pub fn or_fn_chain<F, T>(or_fns: &[F]) -> F
-    where F: FnOnce() -> Option<T>
-{
-    for val in or_fns {
-        let x = val();
-    }
-
-    todo!()
+pub fn or_fn_chain<S, T>(state: &mut S, or_fns: &[fn(&mut S) -> Option<T>]) -> Option<T> {
+    or_fns.iter().find_map(|f| f(state))
 }
 
 impl<'a> Lexer<'a> {
@@ -60,8 +62,15 @@ impl<'a> Lexer<'a> {
         let pos = self.pos;
         None
     }
+
+    pub fn try_digit(&mut self) -> Option<Token<'a>> {
+        let pos = self.pos;
+        None
+    }
+
     pub fn next_token(&mut self) -> Token<'a> {
-        
+        let token = or_fn_chain(self, &[Self::try_string, Self::try_digit]);
+        todo!()
     }
 }
 
@@ -69,7 +78,7 @@ impl<'a> Iterator for Lexer<'a> {
     type Item = Token<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.error {
-            return None
+            return None;
         }
         todo!()
     }
