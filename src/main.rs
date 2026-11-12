@@ -1,4 +1,5 @@
 mod cli;
+mod driver;
 
 use std::io::{self, Write};
 use std::process::ExitCode;
@@ -10,5 +11,6 @@ fn main() -> ExitCode {
     if let Err(error) = cli.validate() {
         error.exit();
     };
+    driver::drive(cli);
     ExitCode::SUCCESS
 }
