@@ -1,0 +1,5 @@
+[toolchain]
+# Implementing `?` for Parser requires the unstable try_trait_v2 feature.
+channel = "nightly-2026-06-01"
+profile = "minimal"
+components = ["rust-analyzer", "rust-src"]

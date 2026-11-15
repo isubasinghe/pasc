@@ -28,14 +28,14 @@ pub struct Lexer<'a> {
 
 /// Token holds the direct token as well as
 /// its location data
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub struct Token<'a> {
     raw_str: &'a str,
     offset: usize,
     kind: TokenValue<'a>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum TokenValue<'a> {
     Program,
     Comment(&'a str),
